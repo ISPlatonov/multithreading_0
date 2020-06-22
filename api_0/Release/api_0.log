@@ -1,0 +1,7 @@
+﻿  main.cpp
+C:\Programs\C++\api_0\api_0\main.cpp(25,13): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+  Создание кода
+  Previous IPDB not found, fall back to full compilation.
+  All 184 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  api_0.vcxproj -> C:\Programs\C++\api_0\Release\api_0.exe
