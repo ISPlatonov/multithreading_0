@@ -5,14 +5,14 @@
 #include <chrono>
 #include <vector>
 
-using namespace std;
+#define FUNCS_NUM 4
+#define TRDS_NUM 16
 
-vector<string> v(1, "_begining");
+using namespace std;
 
 mutex mtx;
 
-template <typename T>
-void output_vector(vector<T> v, unsigned int stoptime_ms) {
+void output_vector(vector<string> v, unsigned int stoptime_ms) {
 	for (string s : v) {
 		cout << s << ' ';
 		this_thread::sleep_for(chrono::milliseconds(stoptime_ms));
@@ -87,29 +87,51 @@ void f4(vector<string> &v, int id) {
 	write(v, "_str", id);
 }
 
+void joinThreads(vector<thread*>& trds)
+{
+	for (auto trd : trds)
+	{
+		trd->join();
+	}
+}
+
+void createThreads(vector<thread*>& trds, vector<string>& v)
+{
+	for (uint16_t i = 1; i <= TRDS_NUM; ++i)
+	{
+		if (i % FUNCS_NUM == 1)
+			trds.push_back(new thread(f1, ref(v), i));
+		else if (i % FUNCS_NUM == 2)
+			trds.push_back(new thread(f2, ref(v), i));
+		else if (i % FUNCS_NUM == 3)
+			trds.push_back(new thread(f3, ref(v), i));
+		else if (i % FUNCS_NUM == 0)
+			trds.push_back(new thread(f4, ref(v), i));
+	}
+}
+
 int main() {
-	thread t1(f1, ref(v), 1);
-	thread t2(f2, ref(v), 2);
-	thread t3(f3, ref(v), 3);
-	thread t4(f4, ref(v), 4);
-	thread t5(f1, ref(v), 5);
-	thread t6(f2, ref(v), 6);
-	thread t7(f3, ref(v), 7);
-	thread t8(f4, ref(v), 8);
-	thread t9(f1, ref(v), 9);
-	thread t10(f2, ref(v), 10);
-	thread t11(f3, ref(v), 11);
-	thread t12(f4, ref(v), 12);
-	thread t13(f1, ref(v), 13);
-	thread t14(f2, ref(v), 14);
-	thread t15(f3, ref(v), 15);
-	thread t16(f4, ref(v), 16);
+	vector<string> v(1, "_begining");
+
+	vector<thread*> trds;
+	//const vector<void*> funcs = { &f1, &f2, &f3, &f4 };
+	
+	createThreads(trds, v);
+	/*for (int i = 1; i <= 16; ++i)
+	{
+		trds.push_back(new thread(f1, ref(v), i));
+	}*/
 
 	auto begin = chrono::steady_clock::now();
-	t1.join(), t2.join(), t3.join(), t4.join(), 
+	/*t1.join(), t2.join(), t3.join(), t4.join() ,
 	t5.join(), t6.join(), t7.join(), t8.join(), 
 	t9.join(), t10.join(), t11.join(), t12.join(), 
-	t13.join(), t14.join(), t15.join(), t16.join();
+	t13.join(), t14.join(), t15.join(), t16.join();*/
+	joinThreads(trds);
+	/*for (auto trd : trds)
+	{
+		trd->join();
+	}*/
 	auto end = chrono::steady_clock::now();
 
 	auto elapsed_ms = chrono::duration_cast<chrono::milliseconds>(end - begin);

@@ -1,2 +1,23 @@
-﻿  main.cpp
-  api_0.vcxproj -> C:\Programs\C++\api_0\Debug\api_0.exe
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (multithreading_0.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  main.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(43,14): error C2672: "std::invoke": не найдена соответствующая перегруженная функция
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(49): message : выполняется компиляция ссылки на экземпляр шаблон функции "unsigned int std::thread::_Invoke<_Tuple,0,1,2>(void *) noexcept"
+          with
+          [
+              _Tuple=_Tuple
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(55): message : выполняется компиляция ссылки на экземпляр шаблон функции "unsigned int (__stdcall *std::thread::_Get_invoke<_Tuple,0,1,2>(std::integer_sequence<unsigned int,0,1,2>) noexcept)(void *)"
+C:\Programs\C++\api_0\api_0\main.cpp(101): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::thread::thread<const _Ty&,std::reference_wrapper<std::vector<std::string,std::allocator<std::string>>>,uint16_t&,void>(_Fn,std::reference_wrapper<std::vector<std::string,std::allocator<std::string>>> &&,uint16_t &)"
+          with
+          [
+              _Ty=void *,
+              _Fn=void *const &
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\chrono(632): message : выполняется компиляция ссылки на экземпляр класс шаблон функции "std::chrono::duration<double,std::ratio<1,1>>"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\chrono(178): message : выполняется компиляция ссылки на экземпляр класс шаблон функции "std::chrono::duration<__int64,std::nano>"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\chrono(610): message : выполняется компиляция ссылки на экземпляр класс шаблон функции "std::chrono::time_point<std::chrono::steady_clock,std::chrono::nanoseconds>"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(39,5): error C2893: Сбой при специализации функции-шаблона "unknown-type std::invoke(_Callable &&,_Types &&...) noexcept(<expr>)".
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\type_traits(1579): message : см. объявление "std::invoke"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(39,5): message : Со следующими аргументами шаблона:
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(39,5): message : "_Callable=void *"
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\thread(39,5): message : "_Types={std::reference_wrapper<std::vector<std::string,std::allocator<std::string>>>, unsigned short}"
