@@ -5,42 +5,12 @@
 #include <chrono>
 #include <vector>
 
-#define FUNCS_NUM 4
-#define TRDS_NUM 16
+#define READERS_NUM 100
+#define WRITERS_NUM 50
 
 using namespace std;
 
 mutex mtx;
-
-void output_vector(vector<string> v, unsigned int stoptime_ms) {
-	for (string s : v) {
-		cout << s << ' ';
-		this_thread::sleep_for(chrono::milliseconds(stoptime_ms));
-	}
-	cout << endl;
-}
-
-void read(vector<string> &v, int id) {
-	this_thread::sleep_for(chrono::milliseconds(2000));
-	mtx.lock();
-	cout << id << " read the vector: ";
-	output_vector(v, 0);
-	cout << "-----" << endl;
-	mtx.unlock();
-	this_thread::sleep_for(chrono::milliseconds(2000));
-}
-
-void write(vector<string> &v, string s, int id) {
-	this_thread::sleep_for(chrono::milliseconds(2000));
-	mtx.lock();
-	v.push_back(s + to_string(id));
-	cout << id << " pushed the string " << s << id << " into the vector" << endl;
-	cout << "The vector: ";
-	output_vector(v, 20);
-	cout << "-----" << endl;
-	mtx.unlock();
-	this_thread::sleep_for(chrono::milliseconds(2000));
-}
 
 //This structure attends about starting and ending a thread
 struct Attention {
@@ -52,39 +22,42 @@ struct Attention {
 		cout << "Thread " << this->id << " starts worling" << endl << "-----" << endl;
 	}
 
-	~Attention(){
+	~Attention() {
 		lock_guard<mutex> guard(mtx);
 		cout << "Thread " << this->id << " stops worling" << endl << "-----" << endl;
 	}
 };
 
-void f1(vector<string> &v, int id) {
-	Attention attention(id);
-	read(v, id);
-	read(v, id);
-	write(v, "_str", id);
-	read(v, id);
+void output_vector(vector<string> v, unsigned int stoptime_ms) {
+	for (string s : v) {
+		cout << s << ' ';
+		this_thread::sleep_for(chrono::milliseconds(stoptime_ms));
+	}
+	cout << endl;
 }
-void f2(vector<string> &v, int id) {
-	Attention attention(id);
-	write(v, "_str", id);
-	read(v, id);
-	write(v, "_str", id);
-	read(v, id);
+
+void read(vector<string> &v, int id) {
+	Attention atntn(id);
+	this_thread::sleep_for(chrono::milliseconds(2000));
+	mtx.lock();
+	cout << id << " read the vector: ";
+	output_vector(v, 0);
+	cout << "-----" << endl;
+	mtx.unlock();
+	this_thread::sleep_for(chrono::milliseconds(2000));
 }
-void f3(vector<string> &v, int id) {
-	Attention attention(id);
-	read(v, id);
-	write(v, "_str", id);
-	read(v, id);
-	write(v, "_str", id);
-}
-void f4(vector<string> &v, int id) {
-	Attention attention(id);
-	read(v, id);
-	write(v, "_str", id);
-	write(v, "_str", id);
-	write(v, "_str", id);
+
+void write(vector<string> &v, string s, int id) {
+	Attention atntn(id);
+	this_thread::sleep_for(chrono::milliseconds(2000));
+	mtx.lock();
+	v.push_back(s + to_string(id));
+	cout << id << " pushed the string " << s << id << " into the vector" << endl;
+	cout << "The vector: ";
+	output_vector(v, 20);
+	cout << "-----" << endl;
+	mtx.unlock();
+	this_thread::sleep_for(chrono::milliseconds(2000));
 }
 
 void joinThreads(vector<thread*>& trds)
@@ -97,16 +70,12 @@ void joinThreads(vector<thread*>& trds)
 
 void createThreads(vector<thread*>& trds, vector<string>& v)
 {
-	for (uint16_t i = 1; i <= TRDS_NUM; ++i)
+	for (uint16_t i = 1, j = 1; i <= READERS_NUM || j <= WRITERS_NUM; ++i, ++j)
 	{
-		if (i % FUNCS_NUM == 1)
-			trds.push_back(new thread(f1, ref(v), i));
-		else if (i % FUNCS_NUM == 2)
-			trds.push_back(new thread(f2, ref(v), i));
-		else if (i % FUNCS_NUM == 3)
-			trds.push_back(new thread(f3, ref(v), i));
-		else if (i % FUNCS_NUM == 0)
-			trds.push_back(new thread(f4, ref(v), i));
+		if (i <= READERS_NUM)
+			trds.push_back(new thread(read, ref(v), i));
+		if (j <= WRITERS_NUM)
+			trds.push_back(new thread(write, ref(v), "_str", j + READERS_NUM));
 	}
 }
 
